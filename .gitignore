@@ -1,0 +1,60 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Env
+venv/
+.venv/
+env/
+ENV/
+.env/
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Data
+data/
+!data/.gitkeep
+
+# MLflow
+mlruns/
+.trash/
+
+# Artifacts
+models/
+*.pkl
+*.joblib
+*.png
+*.log
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Deployment
+.env

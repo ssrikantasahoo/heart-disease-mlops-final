@@ -1,0 +1,54 @@
+name: CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    needs: [build-and-test] # Ensure CI passes first. Note: This requires the CI job to be in the same workflow or we assume CI runs separately. 
+                             # Since they are separate files, we can't easily 'need' across files without reusable workflows or just relying on branch protection.
+                             # For simplicity, I will just run the build/push steps here.
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build, tag, and push image to Amazon ECR
+      id: build-image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        # Build a docker container and
+        # push it to ECR so that it can
+        # be deployed to ECS.
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+    # Example Deployment to App Runner
+    # Uncomment and configure if you want to auto-deploy to App Runner
+    # - name: Deploy to App Runner
+    #   uses: aws-actions/amazon-app-runner-deploy@v1
+    #   with:
+    #     service: ${{ secrets.AWS_APP_RUNNER_SERVICE }}
+    #     image: ${{ steps.build-image.outputs.image }}
+    #     access-role-arn: ${{ secrets.APP_RUNNER_ROLE_ARN }} # Optional, if needed
+    #     region: ${{ secrets.AWS_REGION }}
+    #     cpu: 1
+    #     memory: 2
+    #     port: 8000

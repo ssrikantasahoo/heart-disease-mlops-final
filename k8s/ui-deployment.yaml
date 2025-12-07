@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: heart-ui-deployment
+  labels:
+    app: heart-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: heart-ui
+  template:
+    metadata:
+      labels:
+        app: heart-ui
+    spec:
+      containers:
+      - name: heart-ui
+        image: heart-ui:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 80
