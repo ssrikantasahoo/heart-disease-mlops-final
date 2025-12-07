@@ -1,7 +1,8 @@
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
-from train import train_models
+from train import train_models  # noqa: E402
+
 
 def test_train_models():
     output = train_models()

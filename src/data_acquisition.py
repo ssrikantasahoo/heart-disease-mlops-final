@@ -6,6 +6,7 @@ DATA_URL = "https://archive.ics.uci.edu/static/public/45/heart+disease.zip"
 OUTPUT_DIR = "data"
 CSV_PATH = os.path.join(OUTPUT_DIR, "heart.csv")
 
+
 def download_dataset():
     """
     Downloads Heart Disease dataset from UCI Repository.
@@ -31,11 +32,11 @@ def download_dataset():
     # UCI dataset includes multiple files; select processed Cleveland data
     target_file = "processed.cleveland.data"
     extracted_files = os.listdir(OUTPUT_DIR)
-    
+
     if target_file in extracted_files:
         # Read the data - it has no header
         df = pd.read_csv(os.path.join(OUTPUT_DIR, target_file), header=None)
-        df.to_csv(CSV_PATH, index=False, header=False) # Keep it raw, preprocessing will add headers
+        df.to_csv(CSV_PATH, index=False, header=False)  # Keep it raw, preprocessing will add headers
         print(f"Successfully extracted {target_file}")
     else:
         # Fallback if specific file not found (unlikely with correct zip)
@@ -49,6 +50,7 @@ def download_dataset():
 
     print(f"Dataset saved at {CSV_PATH}")
     return CSV_PATH
+
 
 if __name__ == "__main__":
     download_dataset()

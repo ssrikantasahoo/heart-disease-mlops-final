@@ -1,9 +1,7 @@
-import numpy as np
-from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.model_selection import cross_val_score
 from sklearn.metrics import accuracy_score, precision_score, recall_score, roc_auc_score
-from sklearn.pipeline import Pipeline
 import pandas as pd
+
 
 def get_model_metrics(model, X_test, y_test):
     """
@@ -22,12 +20,14 @@ def get_model_metrics(model, X_test, y_test):
         "roc_auc": roc_auc_score(y_test, y_prob)
     }
 
+
 def run_cross_validation(model, X, y, cv=5):
     """
     Computes CV accuracy scores.
     """
     scores = cross_val_score(model, X, y, cv=cv, scoring="accuracy")
     return scores.mean()
+
 
 def comparison_table(results_dict):
     """

@@ -11,15 +11,14 @@ os.makedirs("screenshots", exist_ok=True)
 try:
     df = pd.read_csv("data/heart.csv", header=None)
     df.columns = [
-        'age','sex','cp','trestbps','chol','fbs','restecg',
-        'thalach','exang','oldpeak','slope','ca','thal','target'
+        'age', 'sex', 'cp', 'trestbps', 'chol', 'fbs', 'restecg',
+        'thalach', 'exang', 'oldpeak', 'slope', 'ca', 'thal', 'target'
     ]
-    
     # Clean data (handle '?' and convert to numeric)
     df.replace("?", np.nan, inplace=True)
     df.dropna(inplace=True)
-    df = df.astype(float) # Convert all to float
-    
+    df = df.astype(float)  # Convert all to float
+
     # Map target for class balance (0 vs 1-4) similar to preprocessing
     df['target_binary'] = df['target'].apply(lambda x: 1 if x > 0 else 0)
 
@@ -53,8 +52,10 @@ except Exception as e:
     import traceback
     traceback.print_exc()
 
+
 # 2. Generate Mock "Screenshots" for K8s and CI/CD
 # We will create images with text content mimicking a terminal capture
+
 
 def create_text_image(text, filename, title="Screenshot"):
     fig, ax = plt.subplots(figsize=(12, 6))
@@ -64,6 +65,7 @@ def create_text_image(text, filename, title="Screenshot"):
     plt.tight_layout()
     plt.savefig(filename)
     plt.close()
+
 
 # Mock K8s
 k8s_text = """

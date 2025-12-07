@@ -1,6 +1,6 @@
 import mlflow
-import numpy as np
 import pandas as pd
+
 
 class HeartDiseaseInference:
     """
@@ -36,6 +36,7 @@ class HeartDiseaseInference:
             "prediction": int(pred),
             "confidence": float(prob)
         }
+
 
 if __name__ == "__main__":
     # Example test (replace run ID)

@@ -11,11 +11,10 @@ from sklearn.ensemble import RandomForestClassifier
 from preprocessing import clean_dataset
 from model_utils import get_model_metrics
 
+
 def run_experiment():
     """
-    Runs an MLflow experiment training both Logistic Regression
-    and Random Forest on the cleaned Heart Disease dataset.
-    
+    Runs an MLflow experiment training both Logistic Regression and Random Forest on the cleaned Heart Disease dataset.
     Logs:
     - Parameters
     - Metrics
@@ -123,6 +122,7 @@ def run_experiment():
         print(f"Artifact URI: {mlflow.get_artifact_uri()}")
 
     print("MLflow experiment completed. Run 'mlflow ui' to view results.")
+
 
 if __name__ == "__main__":
     run_experiment()

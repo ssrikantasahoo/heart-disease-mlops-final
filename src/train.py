@@ -14,6 +14,7 @@ from model_utils import (
 
 from preprocessing import clean_dataset
 
+
 def train_models():
     """
     Train Logistic Regression and Random Forest models with:
@@ -62,11 +63,11 @@ def train_models():
         'model__max_depth': [None, 6, 10],
         'model__min_samples_split': [2, 5]
     }
-    
+
     from sklearn.model_selection import GridSearchCV
     grid_search = GridSearchCV(rf_pipe, param_grid, cv=5, scoring='accuracy', n_jobs=-1)
     grid_search.fit(X_train, y_train)
-    
+
     best_rf_model = grid_search.best_estimator_
     print(f"Best RF Params: {grid_search.best_params_}")
 
@@ -96,6 +97,7 @@ def train_models():
         "random_forest_model": best_rf_model,
         "comparison_table": table
     }
+
 
 if __name__ == "__main__":
     train_models()

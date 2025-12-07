@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Request
 from pydantic import BaseModel
 import logging
+import os
 from prometheus_client import Counter, generate_latest
 from fastapi.responses import PlainTextResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -44,14 +45,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# --------------------------
-import os
 
 # --------------------------
 # MLflow model loader
 # Replace <RUN_ID> after running MLflow training or set MLFLOW_MODEL_URI env var
 # --------------------------
-MODEL_URI = os.getenv("MLFLOW_MODEL_URI", "file:///c:/Users/ssrik/Downloads/heart-disease-mlops-final/mlruns/782724371802594758/models/m-d2685904365445a585d9fa5f71e5a520/artifacts")
+MODEL_URI = os.getenv(
+    "MLFLOW_MODEL_URI",
+    "file:///c:/Users/ssrik/Downloads/heart-disease-mlops-final/mlruns/782724371802594758/models/"
+    "m-d2685904365445a585d9fa5f71e5a520/artifacts"
+)
 inference_engine = HeartDiseaseInference(model_uri=MODEL_URI)
 
 

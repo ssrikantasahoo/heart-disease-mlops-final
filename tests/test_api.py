@@ -1,5 +1,5 @@
 from fastapi.testclient import TestClient
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 import sys
 import os
 
@@ -10,9 +10,10 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 's
 with patch('inference_pipeline.HeartDiseaseInference') as MockEngine:
     mock_instance = MockEngine.return_value
     mock_instance.predict_single.return_value = {"prediction": 1, "confidence": 0.85}
-    
-    from app import app
+
+    from app import app  # noqa: E402
     client = TestClient(app)
+
 
 def test_predict_endpoint():
     payload = {
