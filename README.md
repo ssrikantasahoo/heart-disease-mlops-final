@@ -8,6 +8,16 @@ This project implements an end-to-end MLOps pipeline for predicting heart diseas
 - **Docker Desktop** (with Kubernetes enabled)
 - **Git**
 
+## ⚡ Quick Start
+
+For a detailed walkthrough, see the [Deployment Guide](docs/DEPLOYMENT_GUIDE.md).
+
+**Fast Track Local Deployment:**
+1. `docker build -t heart-api .`
+2. `docker build -f Dockerfile.ui -t heart-ui .`
+3. `kubectl apply -f k8s/`
+4. Access UI at [http://localhost:30081](http://localhost:30081)
+
 ## � Installation
 
 1. **Clone the repository:**
@@ -83,6 +93,10 @@ Execute the following scripts in order to prepare data and train models.
    The service is exposed via NodePort on port `30080`.
    - URL: `http://localhost:30080`
    - Metrics: `http://localhost:30080/metrics`
+
+5. **Access the UI:**
+   The user interface is exposed on port `30081`.
+   - URL: `http://localhost:30081`
 
 ## � Monitoring
 

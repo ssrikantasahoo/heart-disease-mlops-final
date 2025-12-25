@@ -31,3 +31,17 @@ def test_predict_endpoint():
     assert "confidence" in result
     assert result["prediction"] == 1
     assert result["confidence"] == 0.85
+
+
+def test_prediction_response_schema():
+    payload = {
+        "age": 50, "sex": 1, "cp": 0, "trestbps": 130,
+        "chol": 250, "fbs": 0, "restecg": 1,
+        "thalach": 160, "exang": 0, "oldpeak": 1.0,
+        "slope": 2, "ca": 0, "thal": 2
+    }
+    response = client.post("/predict", json=payload)
+    assert response.status_code == 200
+    assert "prediction" in response.json()
+    assert "confidence" in response.json()
+

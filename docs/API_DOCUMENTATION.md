@@ -98,3 +98,26 @@ Example:
 api_requests_total 5.0
 ...
 ```
+
+---
+
+### 4. Error Handling
+
+The API returns standard HTTP status codes:
+
+- **200 OK**: Successful prediction.
+- **422 Validation Error**: The request body is missing fields or has incorrect data types (e.g., string instead of float).
+- **500 Internal Server Error**: Unexpected server error (check logs).
+
+**Example Validation Error Response:**
+```json
+{
+  "detail": [
+    {
+      "loc": ["body", "age"],
+      "msg": "field required",
+      "type": "value_error.missing"
+    }
+  ]
+}
+```

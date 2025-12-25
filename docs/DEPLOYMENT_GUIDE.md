@@ -32,6 +32,11 @@ docker build --no-cache -t heart-api .
 
 *Note: The Dockerfile is configured to COPY `models/` into the container.*
 
+2. **Build the UI Image:**
+   ```bash
+   docker build -f Dockerfile.ui -t heart-ui .
+   ```
+
 ## 4. Deploy to Kubernetes
 
 We use `kubectl` to apply the manifests located in the `k8s/` directory.

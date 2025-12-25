@@ -94,12 +94,10 @@ J --> K[Monitoring<br/>Prometheus /metrics]
 
 The EDA notebook (`notebooks/EDA.ipynb`) revealed key insights:
 
-- **Age Distribution**: Normally distributed, with higher risk in older age groups.
-- **Class Balance**: The dataset is relatively balanced between "No Disease" (0) and "Disease" (1-4 mapped to 1).
-- **Correlations**:
-    - `cp` (chest pain type) and `thalach` (max heart rate) show positive correlation with heart disease.
-    - `exang` (exercise induced angina) and `oldpeak` show negative correlation.
-- **Outliers**: Some outliers observed in `chol` (cholesterol) but retained to avoid data loss in a small dataset.
+- The dataset shows moderate class imbalance (~55% disease, ~45% no disease).
+- Age, cholesterol, and resting blood pressure show positive correlation with heart disease.
+- No critical missing values observed after preprocessing.
+- Strong correlation observed between chest pain type and target variable.
 
 ![EDA Histograms](../screenshots/eda_histograms.png)
 ![Correlation Heatmap](../screenshots/eda_heatmap.png)
@@ -119,6 +117,9 @@ Two models were trained and compared:
 
 1. **Logistic Regression**: Baseline linear model.
 2. **Random Forest Classifier**: Ensemble method to capture non-linear relationships.
+
+## **Model Selection Justification**
+Random Forest outperformed Logistic Regression in ROC-AUC due to its ability to capture non-linear feature interactions. Hyperparameters such as number of estimators and max depth were tuned empirically to balance bias–variance tradeoff.
 
 ## **Hyperparameter Tuning**
 GridSearchCV was used to tune Random Forest:
@@ -195,6 +196,11 @@ kubectl get services
 ```
 
 ![Deployment Screenshot](../screenshots/k8s_deployment.png)
+
+## **Deployment Verification**
+- Model deployed on local Kubernetes (Minikube/Docker Desktop)
+- Service exposed via NodePort
+- API verified using browser and curl
 
 ## **UI Deployment**
 A user-friendly web interface was added to interact with the API.
