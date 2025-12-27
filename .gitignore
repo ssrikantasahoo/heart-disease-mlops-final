@@ -48,7 +48,6 @@ mlruns/
 models/
 *.pkl
 *.joblib
-*.png
 *.log
 
 # Windows
