@@ -1,136 +1,160 @@
 # Heart Disease Prediction MLOps Pipeline
 
-This project implements an end-to-end MLOps pipeline for predicting heart disease risk. It includes data ingestion, preprocessing, model training, experiment tracking, automated testing, containerization, and Kubernetes deployment.
+[![CI Pipeline](https://github.com/ssrikantasahoo/heart-disease-mlops-final/actions/workflows/ci.yml/badge.svg)](https://github.com/ssrikantasahoo/heart-disease-mlops-final/actions)
+[![CD Pipeline](https://github.com/ssrikantasahoo/heart-disease-mlops-final/actions/workflows/cd.yml/badge.svg)](https://github.com/ssrikantasahoo/heart-disease-mlops-final/actions)
+[![Python 3.9](https://img.shields.io/badge/python-3.9-blue.svg)](https://www.python.org/downloads/release/python-390/)
+[![Docker](https://img.shields.io/badge/docker-available-blue.svg)](https://www.docker.com/)
 
-## � Prerequisites
+An end-to-end MLOps solution for predicting heart disease risk. This project demonstrates a production-grade machine learning pipeline integrating automated training, experiment tracking, containerization, and Kubernetes-based deployment.
 
-- **Python 3.9+**
-- **Docker Desktop** (with Kubernetes enabled)
-- **Git**
+---
 
-## ⚡ Quick Start
+## 📌 Project Overview
 
-For a detailed walkthrough, see the [Deployment Guide](docs/DEPLOYMENT_GUIDE.md).
+The **Heart Disease MLOps Pipeline** is designed to streamline the lifecycle of a machine learning model from data ingestion to production deployment.
+*   **Problem**: Early detection of heart disease can save lives. This project builds a predictive model using patient health metrics.
+*   **Solution**: A robust, automated pipeline that trains Logistic Regression and Random Forest models, selects the best performer, and serves it via a scalable REST API.
+*   **Key Features**:
+    *   **Automated Pipeline**: Scripts for data acquisition, cleaning, training, and packaging.
+    *   **Experiment Tracking**: Integrated with **MLflow** to track metrics, parameters, and artifacts.
+    *   **Containerization**: Dockerized API and UI for consistent deployment.
+    *   **Orchestration**: Kubernetes manifests for scalable production deployment.
+    *   **Monitoring**: Prometheus metrics for real-time API health tracking.
+    *   **CI/CD**: GitHub Actions for automated testing and deployment to AWS.
 
-**Fast Track Local Deployment:**
-1. `docker build -t heart-api .`
-2. `docker build -f Dockerfile.ui -t heart-ui .`
-3. `kubectl apply -f k8s/`
-4. Access UI at [http://localhost:30081](http://localhost:30081)
 
-## � Installation
+![Architecture Diagram](docs/image-1.png)
 
-1. **Clone the repository:**
-   ```bash
-   git clone <repository-url>
-   cd heart-disease-mlops-final
-   ```
+---
 
-2. **Create and activate a virtual environment (optional but recommended):**
-   ```bash
-   python -m venv venv
-   # Windows
-   .\venv\Scripts\activate
-   # Linux/Mac
-   source venv/bin/activate
-   ```
+## 🏗️ Architecture & Technology Stack
 
-3. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
+*   **Language**: Python 3.9
+*   **ML Frameworks**: Scikit-Learn, Pandas, NumPy
+*   **Tracking**: MLflow
+*   **API Framework**: FastAPI
+*   **Containerization**: Docker
+*   **Orchestration**: Kubernetes
+*   **CI/CD**: GitHub Actions (Linting with Flake8, Testing with Pytest)
+*   **Cloud Target**: AWS (ECR, App Runner/ECS support)
 
-## 🛠️ Running the Pipeline
+---
 
-Execute the following scripts in order to prepare data and train models.
+## 🚀 Getting Started
 
-1. **Data Acquisition:**
-   Downloads the dataset from UCI.
-   ```bash
-   python src/data_acquisition.py
-   ```
+### Prerequisites
+*   **Python 3.9+**
+*   **Docker Desktop** (Kubernetes enabled)
+*   **Git**
 
-2. **Preprocessing:**
-   Cleans and encodes the data.
-   ```bash
-   python src/preprocessing.py
-   ```
+### 1. Installation
 
-3. **Model Training:**
-   Trains Logistic Regression and Random Forest models, performs cross-validation, and outputs a comparison table.
-   ```bash
-   python src/train.py
-   ```
+Clone the repository and install dependencies:
 
-4. **Experiment Tracking:**
-   Runs the training with MLflow tracking (metrics, params, artifacts).
-   ```bash
-   python src/experiment_tracking.py
-   ```
-   *View results by running `mlflow ui` and navigating to http://localhost:5000*
-## 🐳 Docker Deployment
+```bash
+git clone https://github.com/ssrikantasahoo/heart-disease-mlops-final.git
+cd heart-disease-mlops-final
 
-1. **Build the Docker image:**
-   ```bash
-   docker build -t heart-api .
-## ☸️ Kubernetes Deployment
+# Create virtual environment (Optional)
+python -m venv venv
+# Windows: .\venv\Scripts\activate
+# Mac/Linux: source venv/bin/activate
 
-1. **Update Deployment Manifest:**
-   Edit `k8s/deployment.yaml` and replace `<REPLACE_RUN_ID>` with your actual MLflow Run ID.
+# Install dependencies
+pip install -r requirements.txt
+```
 
-2. **Deploy to Cluster:**
-   ```bash
-   kubectl apply -f k8s/
-   ```
+### 2. Running the ML Pipeline Locally
 
-3. **Verify Deployment:**
-   ```bash
-   kubectl get pods
-   kubectl get services
-   ```
+Execute the pipeline stages in sequence:
 
-4. **Access the Service:**
-   The service is exposed via NodePort on port `30080`.
-   - URL: `http://localhost:30080`
-   - Metrics: `http://localhost:30080/metrics`
+1.  **Data Acquisition**: `python src/data_acquisition.py`
+    *   *Downloads dataset from UCI repository.*
+2.  **Preprocessing**: `python src/preprocessing.py`
+    *   *Cleans data, imputes missing values, encodes categories.*
+3.  **Model Training**: `python src/train.py`
+    *   *Trains models, performs GridSearch, selects best model.*
+4.  **Experiment Tracking**: `python src/experiment_tracking.py`
+    *   *Logs runs to MLflow. View UI at http://localhost:5000.*
 
-5. **Access the UI:**
-   The user interface is exposed on port `30081`.
-   - URL: `http://localhost:30081`
+---
 
-## � Monitoring
+## 🐳 Deployment Guide
 
-Prometheus is configured to scrape metrics from the API.
-- Config file: `monitoring/prometheus.yml`
-- Run Prometheus (using Docker):
-  ```bash
-  docker run -p 9090:9090 -v $(pwd)/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus
-  ```
-- Access Prometheus UI at `http://localhost:9090`.
+For a detailed walkthrough, see [docs/DEPLOYMENT_GUIDE.md](docs/DEPLOYMENT_GUIDE.md).
 
-## 🚀 CI/CD and AWS Deployment
+### Quick Local Deployment (Docker & K8s)
 
-This project uses GitHub Actions for Continuous Integration and Continuous Deployment.
+1.  **Build Custom Images**:
+    ```bash
+    docker build -t heart-api .
+    docker build -f Dockerfile.ui -t heart-ui .
+    ```
+2.  **Deploy to Kubernetes**:
+    ```bash
+    kubectl apply -f k8s/
+    ```
+3.  **Access Services**:
+    *   **Prediction UI**: [http://localhost:30081](http://localhost:30081)
+    *   **API Docs**: [http://localhost:30080/docs](http://localhost:30080/docs)
+    *   **Prometheus Monitoring**: [http://localhost:30090](http://localhost:30090)
 
-### 1. CI Pipeline (`.github/workflows/ci.yml`)
-- Runs on every push and pull request to `main`.
-- Installs dependencies, runs linting (`flake8`), and executes tests (`pytest`).
+---
 
-### 2. CD Pipeline (`.github/workflows/cd.yml`)
-- Runs on every push to `main` (after CI passes).
-- Builds the Docker image and pushes it to Amazon ECR.
-- Can optionally deploy to AWS App Runner or ECS (requires uncommenting the deployment step in `cd.yml`).
+## 🧪 Testing & Validation
 
-### 3. AWS Configuration
-To enable the CD pipeline, you must configure the following **Secrets** in your GitHub repository settings:
+### Pipeline Demo
+Watch the pipeline in action (MLflow Experiment Tracking):
 
-| Secret Name | Description |
-|---|---|
-| `AWS_ACCESS_KEY_ID` | Your AWS Access Key ID |
-| `AWS_SECRET_ACCESS_KEY` | Your AWS Secret Access Key |
-| `AWS_REGION` | AWS Region (e.g., `us-east-1`) |
-| `ECR_REPOSITORY` | Name of your ECR repository (e.g., `heart-disease-mlops`) |
-| `AWS_APP_RUNNER_SERVICE` | (Optional) Name of your App Runner service |
+![Pipeline Demo](docs/pipeline_full.gif)
 
-### 4. Local Configuration (.env)
-A `.env` file has been created to store your AWS credentials locally. **DO NOT COMMIT THIS FILE** if it contains real keys. Use it for local testing or reference.
+### Performance & Metrics
+The pipeline compares **Logistic Regression** vs **Random Forest**.
+*   **Metrics**: Accuracy, Precision, Recall, F1-Score.
+*   **Visualization**: Confusion Matrices and ROC Curves are logged in MLflow.
+
+---
+
+## 🤝 CI/CD Workflows
+
+This project uses **GitHub Actions** to automate quality checks and deployment.
+
+### 1. CI Pipeline (`ci.yml`)
+*   **Triggers**: Push/PR to `main`.
+*   **Steps**: Linting (`flake8`), Unit Tests (`pytest`), Integration Test (Dry run of training).
+
+### 2. CD Pipeline (`cd.yml`)
+*   **Triggers**: Push to `main` (after successful CI).
+*   **Steps**: Builds Docker image, pushes to **Amazon ECR**.
+
+![CI/CD Workflow](docs/image-2.png)
+
+---
+
+## 📂 Project Structure
+
+```
+heart-disease-mlops-final/
+├── .github/workflows/   # CI/CD definitions
+├── data/                # Dataset storage
+├── docs/                # Documentation & Artifacts
+├── k8s/                 # Kubernetes manifests (deploy, service, ingress)
+├── models/              # Serialized models
+├── notebooks/           # EDA and experiments
+├── src/                 # Source code
+│   ├── app.py           # FastAPI application
+│   ├── train.py         # Training script
+│   └── ...
+├── tests/               # Unit tests
+├── ui/                  # HTML Frontend
+├── Dockerfile           # API Docker config
+├── Dockerfile.ui        # UI Docker config
+└── requirements.txt     # Dependencies
+```
+
+---
+
+## 📜 License
+**Copyright © 2025. All Rights Reserved.**
+
+This software is proprietary. unauthorized use, reproduction, distribution, or modification of this project, or any portion of it, is strictly prohibited without the prior written permission of the owner.
