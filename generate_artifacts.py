@@ -57,6 +57,24 @@ except Exception as e:
 # Fetch actual data from running Kubernetes cluster and CI/CD pipeline
 
 import subprocess
+import shutil
+
+
+def get_gh_path():
+    """Get the path to gh CLI executable"""
+    # Try to find gh in PATH
+    gh_path = shutil.which("gh")
+    if gh_path:
+        return f'"{gh_path}"'
+    
+    # Fallback to common Windows installation path
+    common_path = "C:\\Program Files\\GitHub CLI\\gh.exe"
+    import os
+    if os.path.exists(common_path):
+        return f'& "{common_path}"'
+    
+    # If not found, just return 'gh' and hope it's in PATH
+    return "gh"
 
 
 def create_text_image(text, filename, title="Screenshot"):
@@ -103,11 +121,11 @@ except Exception as e:
 # Fetch Real CI/CD Data (GitHub Actions latest workflow run)
 print("Fetching CI/CD pipeline status...")
 try:
-    # Try to get latest GitHub Actions workflow status
-    # This requires gh CLI to be installed and authenticated
-    workflow_output = run_command("gh run list --limit 1 2>&1")
+    # First, check if gh CLI is available
+    gh_cmd = get_gh_path()
+    gh_check = run_command(f"{gh_cmd} --version 2>&1")
     
-    if "gh: command not found" in workflow_output or "not found" in workflow_output.lower():
+    if "not found" in gh_check.lower() or "not recognized" in gh_check.lower():
         # Fallback: Use git log to show recent activity
         cicd_text = """GitHub Actions: CI/CD Pipeline
 Note: Install 'gh' CLI for live pipeline status
@@ -118,15 +136,62 @@ Recent Git Activity:
         git_log = run_command("git log --oneline -5 2>&1")
         cicd_text += git_log
     else:
-        cicd_text = f"""GitHub Actions: Latest Workflow Runs
-{workflow_output}
+        # Use simple text-based output (no JSON parsing needed)
+        print("  → Fetching workflow list...")
+        workflow_list = run_command(f"{gh_cmd} run list --limit 5 2>&1")
+        
+        print("  → Fetching latest run ID...")
+        # Extract the first run ID from the list (non-interactive)
+        # The output format is: STATUS  TITLE  WORKFLOW  BRANCH  EVENT  ID  ELAPSED  AGE
+        # But headers are abbreviated: ST  TI  WO  BR  EV  ID  EL  AG
+        run_id_output = run_command(f"{gh_cmd} run list --limit 1 2>&1")
+        
+        # Try to extract run ID from the output
+        run_id = None
+        lines = run_id_output.strip().split('\n')
+        
+        # Skip header line and process data lines
+        for line in lines:
+            if line.strip() and not line.startswith('ST') and not line.startswith('STATUS'):
+                # Split by multiple spaces/tabs to get columns
+                parts = line.split()
+                # The ID column is typically the 6th column (index 5)
+                # Look for a numeric value that looks like a run ID
+                for part in parts:
+                    # Run IDs are typically large numbers
+                    if part.isdigit() and len(part) >= 2:
+                        run_id = part
+                        break
+                if run_id:
+                    break
+        
+        print(f"  → Fetching details for run ID: {run_id}...")
+        # Get the most recent workflow run details using the extracted ID
+        if run_id:
+            run_details = run_command(f"{gh_cmd} run view {run_id} 2>&1")
+        else:
+            run_details = "Could not extract run ID. Using workflow list only."
+        
+        # Build comprehensive CI/CD text
+        cicd_text = f"""GitHub Actions: CI/CD Pipeline Status
 
-For detailed run info, use: gh run view <run-id>
+=== Latest Workflow Run Details ===
+{run_details}
+
+=== Recent Workflow Runs ===
+{workflow_list}
+
+Commands:
+  - View specific run: gh run view <run-id>
+  - Watch live run: gh run watch
+  - View logs: gh run view --log
 """
     
     create_text_image(cicd_text, "screenshots/cicd_workflow.png", "CI/CD Pipeline Status")
     print("✓ CI/CD screenshot generated")
 except Exception as e:
     print(f"Could not generate CI/CD screenshot: {e}")
+    import traceback
+    traceback.print_exc()
 
 print("All screenshots generated in /screenshots.")
