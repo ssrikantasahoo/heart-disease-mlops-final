@@ -36,6 +36,11 @@ def run_experiment():
     # ==========================================================
     # MLflow experiment
     # ==========================================================
+    import os
+    # Determine the absolute path to the project root (one level up from src/) since this file is in src/
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.dirname(current_dir)
+    mlflow.set_tracking_uri(f"file:///{os.path.join(project_root, 'mlruns')}")
     mlflow.set_experiment("heart-disease-experiment")
 
     # Helper to log plots
@@ -117,11 +122,13 @@ def run_experiment():
         log_plots(rf, X_test, y_test, "random_forest")
 
         # Log model
-        mlflow.sklearn.log_model(rf, "random_forest")
+        model_info = mlflow.sklearn.log_model(rf, "random_forest")
         print(f"Random Forest Run ID: {mlflow.active_run().info.run_id}")
         print(f"Artifact URI: {mlflow.get_artifact_uri()}")
+        print(f"Model URI: {model_info.model_uri}")
 
     print("MLflow experiment completed. Run 'mlflow ui' to view results.")
+    return model_info.model_uri
 
 
 if __name__ == "__main__":

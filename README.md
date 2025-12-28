@@ -15,7 +15,9 @@ The **Heart Disease MLOps Pipeline** is designed to streamline the lifecycle of 
 *   **Problem**: Early detection of heart disease can save lives. This project builds a predictive model using patient health metrics.
 *   **Solution**: A robust, automated pipeline that trains Logistic Regression and Random Forest models, selects the best performer, and serves it via a scalable REST API.
 *   **Key Features**:
-    *   **Automated Pipeline**: Scripts for data acquisition, cleaning, training, and packaging.
+    *   **Automated Pipeline**: Cross-platform script (`run_local_pipeline.py`) for complete ML workflow.
+    *   **Dynamic Model Loading**: Automatically discovers and loads the latest trained model.
+    *   **Auto-Training**: Trains models on first startup if none exist (Docker/K8s ready).
     *   **Experiment Tracking**: Integrated with **MLflow** to track metrics, parameters, and artifacts.
     *   **Containerization**: Dockerized API and UI for consistent deployment.
     *   **Orchestration**: Kubernetes manifests for scalable production deployment.
@@ -66,22 +68,35 @@ pip install -r requirements.txt
 
 ### 2. Running the ML Pipeline Locally
 
-Execute the pipeline stages in sequence:
+Execute the complete pipeline with a single command:
 
-1.  **Data Acquisition**: `python src/data_acquisition.py`
-    *   *Downloads dataset from UCI repository.*
-2.  **Preprocessing**: `python src/preprocessing.py`
-    *   *Cleans data, imputes missing values, encodes categories.*
-3.  **Model Training**: `python src/train.py`
-    *   *Trains models, performs GridSearch, selects best model.*
-4.  **Experiment Tracking**: `python src/experiment_tracking.py`
-    *   *Logs runs to MLflow. View UI at http://localhost:5000.*
+```bash
+python run_local_pipeline.py
+```
+
+This cross-platform script (works on Windows, Linux, and Mac) runs all pipeline stages:
+1.  **Data Acquisition** - Downloads dataset from UCI repository
+2.  **Preprocessing** - Cleans data, imputes missing values, encodes categories
+3.  **Model Training** - Trains models, performs GridSearch, selects best model
+4.  **Experiment Tracking** - Logs runs to MLflow (view UI at http://localhost:5000)
+5.  **Model Packaging** - Packages the best model for deployment
+6.  **Unit Tests** - Validates all components
+
+**Or run individual stages:**
+```bash
+python src/data_acquisition.py
+python src/preprocessing.py
+python src/train.py
+python src/experiment_tracking.py
+```
 
 ---
 
 ## 🐳 Deployment Guide
 
-For a detailed walkthrough, see [docs/DEPLOYMENT_GUIDE.md](docs/DEPLOYMENT_GUIDE.md).
+For detailed deployment instructions:
+- **Local Development**: [docs/LOCAL_DEPLOYMENT_GUIDE.md](docs/LOCAL_DEPLOYMENT_GUIDE.md)
+- **Kubernetes**: [docs/KUBERNETES_DEPLOYMENT.md](docs/KUBERNETES_DEPLOYMENT.md)
 
 ### Quick Local Deployment (Docker & K8s)
 
