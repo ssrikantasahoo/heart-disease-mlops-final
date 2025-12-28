@@ -53,8 +53,10 @@ except Exception as e:
     traceback.print_exc()
 
 
-# 2. Generate Mock "Screenshots" for K8s and CI/CD
-# We will create images with text content mimicking a terminal capture
+# 2. Generate Real Screenshots for K8s and CI/CD
+# Fetch actual data from running Kubernetes cluster and CI/CD pipeline
+
+import subprocess
 
 
 def create_text_image(text, filename, title="Screenshot"):
@@ -67,35 +69,64 @@ def create_text_image(text, filename, title="Screenshot"):
     plt.close()
 
 
-# Mock K8s
-k8s_text = """
-$ kubectl get pods
-NAME                             READY   STATUS    RESTARTS   AGE
-heart-disease-api-5b6d9f8c7-abc  1/1     Running   0          5m
-heart-disease-api-5b6d9f8c7-xyz  1/1     Running   0          5m
+def run_command(command):
+    """Execute shell command and return output"""
+    try:
+        result = subprocess.run(
+            command,
+            shell=True,
+            capture_output=True,
+            text=True,
+            timeout=30
+        )
+        return result.stdout if result.returncode == 0 else result.stderr
+    except Exception as e:
+        return f"Error executing command: {e}"
 
+
+# Fetch Real K8s Data
+print("Fetching Kubernetes deployment status...")
+try:
+    pods_output = run_command("kubectl get pods")
+    services_output = run_command("kubectl get services")
+    
+    k8s_text = f"""$ kubectl get pods
+{pods_output}
 $ kubectl get services
-NAME                TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
-kubernetes          ClusterIP   10.96.0.1       <none>        443/TCP        10d
-heart-disease-service NodePort   10.100.200.55   <none>        8000:30080/TCP 5m
-"""
-create_text_image(k8s_text, "screenshots/k8s_deployment.png", "Kubernetes Deployment Status")
+{services_output}"""
+    
+    create_text_image(k8s_text, "screenshots/k8s_deployment.png", "Kubernetes Deployment Status")
+    print("✓ Kubernetes screenshot generated")
+except Exception as e:
+    print(f"Could not generate K8s screenshot: {e}")
 
-# Mock CI/CD
-cicd_text = """
-GitHub Actions: CI Pipeline #42
-Status: Success (took 2m 15s)
+# Fetch Real CI/CD Data (GitHub Actions latest workflow run)
+print("Fetching CI/CD pipeline status...")
+try:
+    # Try to get latest GitHub Actions workflow status
+    # This requires gh CLI to be installed and authenticated
+    workflow_output = run_command("gh run list --limit 1 2>&1")
+    
+    if "gh: command not found" in workflow_output or "not found" in workflow_output.lower():
+        # Fallback: Use git log to show recent activity
+        cicd_text = """GitHub Actions: CI/CD Pipeline
+Note: Install 'gh' CLI for live pipeline status
+Run: gh auth login
 
-v build-and-test
-  > Set up job                  [ 2s ]
-  > Run actions/checkout@v3     [ 1s ]
-  > Set up Python 3.9           [ 5s ]
-  > Install dependencies        [ 45s]
-  > Lint with flake8            [ 10s]
-  > Test with pytest            [ 30s]
-    -> 4 passed in 0.32s
-  > Complete job                [ 1s ]
+Recent Git Activity:
 """
-create_text_image(cicd_text, "screenshots/cicd_workflow.png", "CI/CD Pipeline Result")
+        git_log = run_command("git log --oneline -5 2>&1")
+        cicd_text += git_log
+    else:
+        cicd_text = f"""GitHub Actions: Latest Workflow Runs
+{workflow_output}
+
+For detailed run info, use: gh run view <run-id>
+"""
+    
+    create_text_image(cicd_text, "screenshots/cicd_workflow.png", "CI/CD Pipeline Status")
+    print("✓ CI/CD screenshot generated")
+except Exception as e:
+    print(f"Could not generate CI/CD screenshot: {e}")
 
 print("All screenshots generated in /screenshots.")
