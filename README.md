@@ -25,9 +25,9 @@ The **Heart Disease MLOps Pipeline** is designed to streamline the lifecycle of 
     *   **CI/CD**: GitHub Actions for automated testing and deployment to AWS.
 
 
-![Architecture Diagram](docs/SystemArchitectureOverview.png)
+![Architecture Diagram](docs/images/SystemArchitectureOverview.png)
 
-![Data Flow Diagram](docs/DataFlowArchitecture.png)
+![Data Flow Diagram](docs/images/DataFlowArchitecture.png)
 
 
 
@@ -78,7 +78,7 @@ Execute the complete pipeline with a single command:
 python run_local_pipeline.py
 ```
 
-![ML Training Pipeline](docs/MLTrainingPipeline.png)
+![ML Training Pipeline](docs/images/MLTrainingPipeline.png)
 
 
 This cross-platform script (works on Windows, Linux, and Mac) runs all pipeline stages:
@@ -104,6 +104,8 @@ python src/experiment_tracking.py
 For detailed deployment instructions:
 - **Local Development**: [docs/LOCAL_DEPLOYMENT_GUIDE.md](docs/LOCAL_DEPLOYMENT_GUIDE.md)
 - **Kubernetes**: [docs/KUBERNETES_DEPLOYMENT.md](docs/KUBERNETES_DEPLOYMENT.md)
+- **CONFIGURATION**: [docs/CONFIGURATION_GUIDE.md](docs/CONFIGURATION_GUIDE.md)
+- **PROMETHEUS**: [docs/PROMETHEUS_DASHBOARD.md](docs/PROMETHEUS_DASHBOARD.md)
 
 ### Quick Local Deployment (Docker & K8s)
 
@@ -129,7 +131,7 @@ For detailed deployment instructions:
 ### Pipeline Demo
 Watch the pipeline in action (MLflow Experiment Tracking):
 
-![Pipeline Demo](docs/pipeline_full.gif)
+![Pipeline Demo](docs/images/pipeline_full.gif)
 
 ### Performance & Metrics
 The pipeline compares **Logistic Regression** vs **Random Forest**.
@@ -150,9 +152,9 @@ This project uses **GitHub Actions** to automate quality checks and deployment.
 *   **Triggers**: Push to `main` (after successful CI).
 *   **Steps**: Builds Docker image, pushes to **Amazon ECR**.
 
-![CI/CD Workflow](docs/CICDPipelineArchitecture.png)
+![CI/CD Workflow](docs/images/CICDPipelineArchitecture.png)
 
-![Component Interaction Diagram](docs/ComponentInteractionDiagram.png)
+![Component Interaction Diagram](docs/images/ComponentInteractionDiagram.png)
 
 ---
 
