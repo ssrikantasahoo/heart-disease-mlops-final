@@ -25,7 +25,11 @@ The **Heart Disease MLOps Pipeline** is designed to streamline the lifecycle of 
     *   **CI/CD**: GitHub Actions for automated testing and deployment to AWS.
 
 
-![Architecture Diagram](docs/image-1.png)
+![Architecture Diagram](docs/SystemArchitectureOverview.png)
+
+![Data Flow Diagram](docs/DataFlowArchitecture.png)
+
+
 
 ---
 
@@ -73,6 +77,9 @@ Execute the complete pipeline with a single command:
 ```bash
 python run_local_pipeline.py
 ```
+
+![ML Training Pipeline](docs/MLTrainingPipeline.png)
+
 
 This cross-platform script (works on Windows, Linux, and Mac) runs all pipeline stages:
 1.  **Data Acquisition** - Downloads dataset from UCI repository
@@ -143,7 +150,9 @@ This project uses **GitHub Actions** to automate quality checks and deployment.
 *   **Triggers**: Push to `main` (after successful CI).
 *   **Steps**: Builds Docker image, pushes to **Amazon ECR**.
 
-![CI/CD Workflow](docs/image-2.png)
+![CI/CD Workflow](docs/CICDPipelineArchitecture.png)
+
+![Component Interaction Diagram](docs/ComponentInteractionDiagram.png)
 
 ---
 
