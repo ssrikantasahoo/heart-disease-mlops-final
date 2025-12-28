@@ -1,10 +1,11 @@
 import os
 import pandas as pd
 import requests
+from config import config
 
-DATA_URL = "https://archive.ics.uci.edu/static/public/45/heart+disease.zip"
-OUTPUT_DIR = "data"
-CSV_PATH = os.path.join(OUTPUT_DIR, "heart.csv")
+DATA_URL = config.DATA_URL
+OUTPUT_DIR = config.DATA_DIR
+CSV_PATH = config.CSV_PATH
 
 
 def download_dataset():
@@ -30,7 +31,7 @@ def download_dataset():
         zip_ref.extractall(OUTPUT_DIR)
 
     # UCI dataset includes multiple files; select processed Cleveland data
-    target_file = "processed.cleveland.data"
+    target_file = config.TARGET_DATA_FILE
     extracted_files = os.listdir(OUTPUT_DIR)
 
     if target_file in extracted_files:

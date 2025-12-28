@@ -1,6 +1,7 @@
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import accuracy_score, precision_score, recall_score, roc_auc_score
 import pandas as pd
+from config import config
 
 
 def get_model_metrics(model, X_test, y_test):
@@ -21,10 +22,12 @@ def get_model_metrics(model, X_test, y_test):
     }
 
 
-def run_cross_validation(model, X, y, cv=5):
+def run_cross_validation(model, X, y, cv=None):
     """
     Computes CV accuracy scores.
     """
+    if cv is None:
+        cv = config.CV_FOLDS
     scores = cross_val_score(model, X, y, cv=cv, scoring="accuracy")
     return scores.mean()
 

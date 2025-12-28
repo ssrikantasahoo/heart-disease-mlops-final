@@ -7,6 +7,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestClassifier
+from config import config
 from preprocessing import clean_dataset
 
 
@@ -14,14 +15,14 @@ def save_final_model():
     """Trains final model and saves it to a static directory 'models/production_model' for easy containerization."""
     # 1. Train Model
     print("Training production model...")
-    df = pd.read_csv("data/heart.csv")
+    df = pd.read_csv(config.CSV_PATH)
     df = clean_dataset(df)
 
     X = df.drop("target", axis=1)
     y = df["target"]
 
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42
+        X, y, test_size=config.TEST_SIZE, random_state=config.RANDOM_STATE
     )
 
     model = Pipeline([
@@ -29,15 +30,15 @@ def save_final_model():
         ("clf", RandomForestClassifier(
             n_estimators=100,  # Using tuned params
             max_depth=None,
-            min_samples_split=5,
-            random_state=42
+            min_samples_split=config.RF_MIN_SAMPLES_SPLIT,
+            random_state=config.RANDOM_STATE
         ))
     ])
 
     model.fit(X_train, y_train)
 
     # 2. Save using standard MLflow format but to a fixed path
-    output_path = "models/production_model"
+    output_path = config.PRODUCTION_MODEL_DIR
     # Clean up existing
     if os.path.exists(output_path):
         shutil.rmtree(output_path)

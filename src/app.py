@@ -6,6 +6,7 @@ from prometheus_client import Counter, generate_latest
 from fastapi.responses import PlainTextResponse
 from fastapi.middleware.cors import CORSMiddleware
 
+from config import config
 from inference_pipeline import HeartDiseaseInference
 from experiment_tracking import run_experiment
 
@@ -13,8 +14,8 @@ from experiment_tracking import run_experiment
 # Logging Setup
 # --------------------------
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s — %(levelname)s — %(message)s"
+    level=getattr(logging, config.LOG_LEVEL),
+    format=config.LOG_FORMAT
 )
 logger = logging.getLogger("api_log")
 
@@ -30,9 +31,9 @@ REQUEST_COUNT = Counter(
 # FastAPI App
 # --------------------------
 app = FastAPI(
-    title="Heart Disease Prediction API",
-    description="FastAPI service for predicting heart disease using MLflow model",
-    version="1.0"
+    title=config.API_TITLE,
+    description=config.API_DESCRIPTION,
+    version=config.API_VERSION
 )
 
 # --------------------------
@@ -40,10 +41,10 @@ app = FastAPI(
 # --------------------------
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=config.CORS_ALLOW_ORIGINS,
+    allow_credentials=config.CORS_ALLOW_CREDENTIALS,
+    allow_methods=config.CORS_ALLOW_METHODS,
+    allow_headers=config.CORS_ALLOW_HEADERS,
 )
 
 
@@ -58,8 +59,8 @@ import mlflow
 
 # Path to the models directory for the specific experiment
 # Dynamically resolve experiment ID by name
-experiment_name = "heart-disease-experiment"
-mlflow.set_tracking_uri(f"file:///{os.path.join(project_root, 'mlruns')}")
+experiment_name = config.EXPERIMENT_NAME
+mlflow.set_tracking_uri(config.MLFLOW_TRACKING_URI)
 experiment = mlflow.get_experiment_by_name(experiment_name)
 
 if experiment:

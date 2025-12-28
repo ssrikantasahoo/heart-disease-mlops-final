@@ -1,5 +1,6 @@
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
+from config import config
 
 
 def clean_dataset(df: pd.DataFrame) -> pd.DataFrame:
@@ -13,12 +14,9 @@ def clean_dataset(df: pd.DataFrame) -> pd.DataFrame:
     df.dropna(inplace=True)
 
     # UCI column documentation has 14+ columns; enforce consistent names
-    df.columns = [
-        'age', 'sex', 'cp', 'trestbps', 'chol', 'fbs', 'restecg',
-        'thalach', 'exang', 'oldpeak', 'slope', 'ca', 'thal', 'target'
-    ]
+    df.columns = config.COLUMN_NAMES
 
-    categorical_cols = ['cp', 'restecg', 'slope', 'thal', 'sex', 'fbs', 'exang', 'ca']
+    categorical_cols = config.CATEGORICAL_COLUMNS
 
     for col in categorical_cols:
         df[col] = LabelEncoder().fit_transform(df[col].astype(str))
@@ -32,8 +30,7 @@ def clean_dataset(df: pd.DataFrame) -> pd.DataFrame:
 
 
 if __name__ == "__main__":
-    path = "data/heart.csv"
-    path = "data/heart.csv"
+    path = config.CSV_PATH
     # Read without header as data_acquisition saves it raw
     df = pd.read_csv(path, header=None)
     df_clean = clean_dataset(df)

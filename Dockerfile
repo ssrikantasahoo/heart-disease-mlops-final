@@ -9,10 +9,14 @@ COPY src/ src/
 COPY data/ data/
 COPY models/ models/
 
-EXPOSE 8000
+# Port configuration - can be overridden at build time
+ARG API_PORT=8000
+ENV API_PORT=${API_PORT}
+
+EXPOSE ${API_PORT}
 
 # Set python path to include src
-ENV PYTHONPATH="${PYTHONPATH}:/app/src"
+ENV PYTHONPATH=/app/src
 
 # Run the application
-CMD ["uvicorn", "src.app:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["sh", "-c", "uvicorn src.app:app --host 0.0.0.0 --port ${API_PORT}"]

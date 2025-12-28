@@ -6,6 +6,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
 
+from config import config
 from model_utils import (
     get_model_metrics,
     run_cross_validation,
@@ -26,14 +27,14 @@ def train_models():
     """
 
     # Load data
-    df = pd.read_csv("data/heart.csv")
+    df = pd.read_csv(config.CSV_PATH)
     df = clean_dataset(df)
 
     X = df.drop("target", axis=1)
     y = df["target"]
 
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42
+        X, y, test_size=config.TEST_SIZE, random_state=config.RANDOM_STATE
     )
 
     # ------------------------
@@ -41,7 +42,7 @@ def train_models():
     # ------------------------
     log_reg_pipe = Pipeline([
         ("scaler", StandardScaler()),
-        ("model", LogisticRegression(max_iter=1000, random_state=42))
+        ("model", LogisticRegression(max_iter=config.LOGREG_MAX_ITER, random_state=config.RANDOM_STATE))
     ])
 
     log_reg_pipe.fit(X_train, y_train)
@@ -59,13 +60,13 @@ def train_models():
 
     # Hyperparameter tuning using GridSearchCV
     param_grid = {
-        'model__n_estimators': [100, 200],
-        'model__max_depth': [None, 6, 10],
-        'model__min_samples_split': [2, 5]
+        'model__n_estimators': config.GRID_N_ESTIMATORS,
+        'model__max_depth': config.GRID_MAX_DEPTH,
+        'model__min_samples_split': config.GRID_MIN_SAMPLES_SPLIT
     }
 
     from sklearn.model_selection import GridSearchCV
-    grid_search = GridSearchCV(rf_pipe, param_grid, cv=5, scoring='accuracy', n_jobs=-1)
+    grid_search = GridSearchCV(rf_pipe, param_grid, cv=config.CV_FOLDS, scoring='accuracy', n_jobs=config.GRID_N_JOBS)
     grid_search.fit(X_train, y_train)
 
     best_rf_model = grid_search.best_estimator_

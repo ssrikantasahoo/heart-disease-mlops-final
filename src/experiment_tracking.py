@@ -8,6 +8,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 
+from config import config
 from preprocessing import clean_dataset
 from model_utils import get_model_metrics
 
@@ -23,14 +24,14 @@ def run_experiment():
     """
 
     # Load dataset
-    df = pd.read_csv("data/heart.csv")
+    df = pd.read_csv(config.CSV_PATH)
     df = clean_dataset(df)
 
     X = df.drop("target", axis=1)
     y = df["target"]
 
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42
+        X, y, test_size=config.TEST_SIZE, random_state=config.RANDOM_STATE
     )
 
     # ==========================================================
@@ -40,8 +41,8 @@ def run_experiment():
     # Determine the absolute path to the project root (one level up from src/) since this file is in src/
     current_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.dirname(current_dir)
-    mlflow.set_tracking_uri(f"file:///{os.path.join(project_root, 'mlruns')}")
-    mlflow.set_experiment("heart-disease-experiment")
+    mlflow.set_tracking_uri(config.MLFLOW_TRACKING_URI)
+    mlflow.set_experiment(config.EXPERIMENT_NAME)
 
     # Helper to log plots
     import matplotlib.pyplot as plt
@@ -70,7 +71,7 @@ def run_experiment():
     with mlflow.start_run(run_name="logistic_regression_run"):
         log_reg = Pipeline([
             ("scaler", StandardScaler()),
-            ("clf", LogisticRegression(max_iter=1000))
+            ("clf", LogisticRegression(max_iter=config.LOGREG_MAX_ITER))
         ])
         log_reg.fit(X_train, y_train)
 
@@ -99,9 +100,9 @@ def run_experiment():
         rf = Pipeline([
             ("scaler", StandardScaler()),
             ("clf", RandomForestClassifier(
-                n_estimators=200,
-                max_depth=6,
-                random_state=42
+                n_estimators=config.RF_N_ESTIMATORS,
+                max_depth=config.RF_MAX_DEPTH,
+                random_state=config.RANDOM_STATE
             ))
         ])
         rf.fit(X_train, y_train)
