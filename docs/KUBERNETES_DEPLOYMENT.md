@@ -152,7 +152,8 @@ Expected output:
 NAME                 TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
 heart-api-service    NodePort    10.96.100.50     <none>        8000:30080/TCP   5m
 heart-ui-service     NodePort    10.96.100.51     <none>        80:30081/TCP     5m
-prometheus-service   NodePort    10.96.100.52     <none>        9090:30090/TCP   5m
+mlflow-service       NodePort    10.96.100.52     <none>        5000:30050/TCP   5m
+prometheus-service   NodePort    10.96.100.53     <none>        9090:30090/TCP   5m
 ```
 
 The format `8000:30080` means:
@@ -161,13 +162,14 @@ The format `8000:30080` means:
 
 ### 4.2 Access Points
 
-Based on the NodePort configuration in `k8s/service.yaml` and `k8s/ui-service.yaml`:
+Based on the NodePort configuration in the K8s service manifests:
 
 - **API Documentation**: http://localhost:30080/docs
 - **API Health Check**: http://localhost:30080/
 - **Web UI**: http://localhost:30081/
 - **Metrics**: http://localhost:30080/metrics
 - **Prometheus**: http://localhost:30090/
+- **MLflow UI**: http://localhost:30050/
 
 ### 4.3 Verify Services are Running
 

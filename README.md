@@ -112,6 +112,7 @@ For detailed deployment instructions:
 3.  **Access Services**:
     *   **Prediction UI**: [http://localhost:30081](http://localhost:30081)
     *   **API Docs**: [http://localhost:30080/docs](http://localhost:30080/docs)
+    *   **MLflow UI**: [http://localhost:30050](http://localhost:30050)
     *   **Prometheus Monitoring**: [http://localhost:30090](http://localhost:30090)
 
 ---

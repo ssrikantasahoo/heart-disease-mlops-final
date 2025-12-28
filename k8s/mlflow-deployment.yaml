@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlflow-ui-deployment
+  labels:
+    app: mlflow-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mlflow-ui
+  template:
+    metadata:
+      labels:
+        app: mlflow-ui
+    spec:
+      containers:
+      - name: mlflow-ui
+        image: heart-api:latest
+        imagePullPolicy: Never
+        command: ["mlflow", "ui", "--host", "0.0.0.0", "--port", "5000"]
+        ports:
+        - containerPort: 5000
+        volumeMounts:
+        - name: mlruns-volume
+          mountPath: /app/mlruns
+      volumes:
+      - name: mlruns-volume
+        hostPath:
+          path: /run/desktop/mnt/host/c/Users/ssrik/Downloads/heart-disease-mlops-final/mlruns
+          type: DirectoryOrCreate
