@@ -21,7 +21,7 @@ The **Heart Disease MLOps Pipeline** is designed to streamline the lifecycle of 
     *   **Experiment Tracking**: Integrated with **MLflow** to track metrics, parameters, and artifacts.
     *   **Containerization**: Dockerized API and UI for consistent deployment.
     *   **Orchestration**: Kubernetes manifests for scalable production deployment.
-    *   **Monitoring**: Prometheus metrics for real-time API health tracking.
+    *   **Monitoring**: Prometheus metrics with Grafana dashboards for real-time API health tracking.
     *   **CI/CD**: GitHub Actions for automated testing and deployment to AWS.
 
 
@@ -102,10 +102,11 @@ python src/experiment_tracking.py
 ## 🐳 Deployment Guide
 
 For detailed deployment instructions:
-- **Local Development**: [docs/LOCAL_DEPLOYMENT_GUIDE.md](docs/LOCAL_DEPLOYMENT_GUIDE.md)
-- **Kubernetes**: [docs/KUBERNETES_DEPLOYMENT.md](docs/KUBERNETES_DEPLOYMENT.md)
-- **CONFIGURATION**: [docs/CONFIGURATION_GUIDE.md](docs/CONFIGURATION_GUIDE.md)
-- **PROMETHEUS**: [docs/PROMETHEUS_DASHBOARD.md](docs/PROMETHEUS_DASHBOARD.md)
+- **Model Deployment**: [MODEL_DEPLOYMENT_GUIDE.md](docs/LOCAL_DEPLOYMENT_GUIDE.md)
+- **Kubernetes**: [KUBERNETES_DEPLOYMENT.md](docs/KUBERNETES_DEPLOYMENT.md)
+- **CONFIGURATION**: [CONFIGURATION_GUIDE.md](docs/CONFIGURATION_GUIDE.md)
+- **PROMETHEUS**: [PROMETHEUS_DASHBOARD.md](docs/PROMETHEUS_DASHBOARD.md)
+- **GRAFANA**: [GRAFANA_DASHBOARD.md](docs/GRAFANA_DASHBOARD.md)
 
 ### Quick Local Deployment (Docker & K8s)
 
@@ -123,8 +124,11 @@ For detailed deployment instructions:
     *   **API Docs**: [http://localhost:30080/docs](http://localhost:30080/docs)
     *   **MLflow UI**: [http://localhost:30050](http://localhost:30050)
     *   **Prometheus Monitoring**: [http://localhost:30090](http://localhost:30090)
+    *   **Grafana Dashboard**: [http://localhost:30300](http://localhost:30300) (admin/admin)
 
 ---
+
+![Grafana Dashboard](docs/images/GRAFANA.jpg)
 
 ## 🧪 Testing & Validation
 
@@ -153,6 +157,8 @@ This project uses **GitHub Actions** to automate quality checks and deployment.
 *   **Steps**: Builds Docker image, pushes to **Amazon ECR**.
 
 ![CI/CD Workflow](docs/images/CICDPipelineArchitecture.png)
+
+![CI Workflow](docs/images/CIFLOW.jpg)
 
 ![Component Interaction Diagram](docs/images/ComponentInteractionDiagram.png)
 
