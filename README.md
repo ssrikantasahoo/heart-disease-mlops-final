@@ -102,11 +102,11 @@ python src/experiment_tracking.py
 ## 🐳 Deployment Guide
 
 For detailed deployment instructions:
-- **Model Deployment**: [MODEL_DEPLOYMENT_GUIDE.md](docs/LOCAL_DEPLOYMENT_GUIDE.md)
-- **Kubernetes**: [KUBERNETES_DEPLOYMENT.md](docs/KUBERNETES_DEPLOYMENT.md)
-- **CONFIGURATION**: [CONFIGURATION_GUIDE.md](docs/CONFIGURATION_GUIDE.md)
-- **PROMETHEUS**: [PROMETHEUS_DASHBOARD.md](docs/PROMETHEUS_DASHBOARD.md)
-- **GRAFANA**: [GRAFANA_DASHBOARD.md](docs/GRAFANA_DASHBOARD.md)
+- **Local Testing**: [LOCAL_TESTING_GUIDE](docs/LOCAL_TESTING_GUIDE.md)
+- **Kubernetes**: [KUBERNETES_DEPLOYMENT](docs/KUBERNETES_DEPLOYMENT.md)
+- **CONFIGURATION**: [CONFIGURATION_GUIDE](docs/CONFIGURATION_GUIDE.md)
+- **PROMETHEUS**: [PROMETHEUS_DASHBOARD](docs/PROMETHEUS_DASHBOARD.md)
+- **GRAFANA**: [GRAFANA_DASHBOARD](docs/GRAFANA_DASHBOARD.md)
 
 ### Quick Local Deployment (Docker & K8s)
 
